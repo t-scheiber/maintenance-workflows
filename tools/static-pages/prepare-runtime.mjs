@@ -56,6 +56,18 @@ export function runRuntimeScan({execute,args,childEnv,directory,output,operation
   if(!cleanup)throw Error('Runtime scanner cleanup failed');
  return {scan,startedAt,finishedAt};
 }
+export function createExecutionDockerConfig(directory){
+ const stat=fs.lstatSync(directory);if(!stat.isDirectory()||stat.isSymbolicLink())throw Error('Runtime execution directory differs');
+ const config=path.join(directory,'execution-docker-config');fs.mkdirSync(config,{mode:0o700});return config;
+}
+export function runtimeExecutionDockerEnvironment(directory,env={}){
+ const root=fs.lstatSync(directory);if(!root.isDirectory()||root.isSymbolicLink())throw Error('Runtime execution directory differs');
+ const command=process.platform==='darwin'?'/usr/local/bin/docker':'/usr/bin/docker',dockerConfig=path.join(directory,'execution-docker-config');
+ if(!fs.lstatSync(dockerConfig).isDirectory()||fs.lstatSync(dockerConfig).isSymbolicLink()||fs.readdirSync(dockerConfig).length)throw Error('Runtime execution Docker configuration changed');
+ const dockerBin=path.join(directory,'docker-bin'),dockerLink=path.join(dockerBin,'docker');
+ if(!fs.lstatSync(dockerBin).isDirectory()||fs.lstatSync(dockerBin).isSymbolicLink()||JSON.stringify(fs.readdirSync(dockerBin))!==JSON.stringify(['docker'])||!fs.lstatSync(dockerLink).isSymbolicLink()||fs.readlinkSync(dockerLink)!==command)throw Error('Runtime Docker executable directory changed');
+ return {command,dockerEnvironment:{PATH:dockerBin,DOCKER_CONFIG:dockerConfig,...env.DOCKER_HOST?{DOCKER_HOST:env.DOCKER_HOST}:{}}};
+}
 export async function prepareRuntime(kind,{env=process.env,execute=spawnSync,save=saveRuntimeImage,nativeAdmission=admitSourceScanners,identify=preparationIdentity}={}){
  if(!['node22','node24','semgrep'].includes(kind))throw Error('Unknown fixed source-free runtime');
  const runIdentity=identify(env),policy=runtimePolicy(kind),temporary=env.RUNNER_TEMP;
@@ -90,6 +102,8 @@ export async function prepareRuntime(kind,{env=process.env,execute=spawnSync,sav
   const report=read(path.join(directory,'report.json'),32_000_000);const stderr=Buffer.from(scan.stderr??'');receipt.reportSha256=sha(report);receipt.stderrSha256=sha(stderr);receipt.status='PASS';receipt.scannerIdentity=scannerIdentity;
   receipt.scan={network:'none',cacheReadOnly:true,database:database.database,metadataSha256:database.metadataSha256,startedAt,finishedAt};
   receipt.coverage=validatePreparedRuntime(kind,{receipt,report,stderr,actualConfigId:receipt.configId,runIdentity,scannerIdentity}).coverage;
+  // Docker builders may retain metadata in docker-config. Source execution gets a new empty configuration.
+  createExecutionDockerConfig(directory);runtimeExecutionDockerEnvironment(directory,env);
   return receipt;
  }catch(error){receipt.status='BLOCK';receipt.reason='RUNTIME_PREPARATION_FAILED';throw Error('Runtime preparation blocked');}
  finally{fs.writeFileSync(path.join(directory,'receipt.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});}

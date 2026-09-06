@@ -61,3 +61,44 @@ test('every verification matrix job uploads fixed source-free runtime evidence e
  assert.ok(diagnostics.includes('native-bundle-verification/artifacts'));assert.ok(!diagnostics.includes('runtime.tar.gz'));assert.ok(!diagnostics.includes('/source'));
  const policy=workflow.slice(0,workflow.indexOf('\n  scanners:'));for(const name of ['report.json','stderr.log','stdout.log','operations'])assert.ok(policy.includes('runtime-node24/'+name));
 });
+function dockerFixture(t){
+ const directory=fs.mkdtempSync(path.join(os.tmpdir(),'runtime-execution-config-'));t.after(()=>fs.rmSync(directory,{recursive:true,force:true}));
+ fs.mkdirSync(path.join(directory,'docker-config'));fs.mkdirSync(path.join(directory,'docker-bin'));fs.symlinkSync(process.platform==='darwin'?'/usr/local/bin/docker':'/usr/bin/docker',path.join(directory,'docker-bin/docker'));return directory;
+}
+test('builder metadata coexists with a separately created empty source-execution Docker configuration',async t=>{
+ const {createExecutionDockerConfig,runtimeExecutionDockerEnvironment}=await import('../tools/static-pages/prepare-runtime.mjs'),directory=dockerFixture(t),build=path.join(directory,'docker-config');
+ fs.mkdirSync(path.join(build,'buildx'));fs.writeFileSync(path.join(build,'.token_seed'),'synthetic-builder-state');fs.writeFileSync(path.join(build,'buildx/current'),'synthetic-builder');
+ const config=createExecutionDockerConfig(directory),actual=runtimeExecutionDockerEnvironment(directory,{PATH:'/untrusted',HOME:'/credentials',GH_TOKEN:'never-forward',DOCKER_HOST:'unix:///synthetic-docker.sock'});
+ assert.equal(config,path.join(directory,'execution-docker-config'));assert.deepEqual(fs.readdirSync(config),[]);assert.equal(fs.statSync(config).mode&0o777,0o700);
+ assert.deepEqual(actual.dockerEnvironment,{PATH:path.join(directory,'docker-bin'),DOCKER_CONFIG:config,DOCKER_HOST:'unix:///synthetic-docker.sock'});assert.equal(fs.readFileSync(path.join(build,'.token_seed'),'utf8'),'synthetic-builder-state');assert.equal(fs.readFileSync(path.join(build,'buildx/current'),'utf8'),'synthetic-builder');
+ assert.throws(()=>createExecutionDockerConfig(directory),/EEXIST/);
+});
+test('source-execution configuration rejects auth files, symlinks and other inherited state',async t=>{
+ const {createExecutionDockerConfig,runtimeExecutionDockerEnvironment}=await import('../tools/static-pages/prepare-runtime.mjs');
+ for(const kind of ['auth','dangling-auth','metadata','directory-link','directory-file']){
+  const directory=dockerFixture(t),config=createExecutionDockerConfig(directory);
+  if(kind==='auth')fs.writeFileSync(path.join(config,'config.json'),'{}');
+  if(kind==='dangling-auth')fs.symlinkSync('/missing-auth',path.join(config,'config.json'));
+  if(kind==='metadata')fs.mkdirSync(path.join(config,'buildx'));
+  if(kind==='directory-link'){fs.rmdirSync(config);fs.symlinkSync(path.join(directory,'docker-config'),config);}
+  if(kind==='directory-file'){fs.rmdirSync(config);fs.writeFileSync(config,'{}');}
+  assert.throws(()=>runtimeExecutionDockerEnvironment(directory),/execution Docker configuration/);
+ }
+});
+test('execution never falls back to builder configuration and rejects substituted Docker command directories',async t=>{
+ const {createExecutionDockerConfig,runtimeExecutionDockerEnvironment}=await import('../tools/static-pages/prepare-runtime.mjs');
+ const missing=dockerFixture(t);assert.throws(()=>runtimeExecutionDockerEnvironment(missing),/ENOENT/);
+ for(const kind of ['extra-helper','wrong-target','bin-link','root-link']){
+  const directory=dockerFixture(t);createExecutionDockerConfig(directory);const bin=path.join(directory,'docker-bin');
+  if(kind==='extra-helper')fs.writeFileSync(path.join(bin,'docker-credential-test'),'synthetic');
+  if(kind==='wrong-target'){fs.unlinkSync(path.join(bin,'docker'));fs.symlinkSync('/other/docker',path.join(bin,'docker'));}
+  if(kind==='bin-link'){fs.renameSync(bin,path.join(directory,'real-bin'));fs.symlinkSync(path.join(directory,'real-bin'),bin);}
+  if(kind==='root-link'){const link=path.join(directory,'link');fs.symlinkSync(directory,link);assert.throws(()=>runtimeExecutionDockerEnvironment(link),/execution directory/);continue;}
+  assert.throws(()=>runtimeExecutionDockerEnvironment(directory),/executable directory/);
+ }
+});
+test('successful preparation creates execution configuration after runtime coverage and consumption uses only that environment',()=>{
+ const preparation=fs.readFileSync(new URL('../tools/static-pages/prepare-runtime.mjs',import.meta.url),'utf8'),consumer=fs.readFileSync(new URL('../tools/static-pages/prepared-scanners.mjs',import.meta.url),'utf8');
+ assert.ok(preparation.indexOf('receipt.coverage=validatePreparedRuntime')<preparation.indexOf('createExecutionDockerConfig(directory);runtimeExecutionDockerEnvironment(directory,env);'));
+ assert.match(consumer,/const \{command,dockerEnvironment\}=runtimeExecutionDockerEnvironment\(directory,env\)/);assert.doesNotMatch(consumer,/path.join\(directory,'docker-config'\)/);assert.match(consumer,/execute\(command,\['image','inspect',validated.executionImage\],\{env:dockerEnvironment/);
+});
