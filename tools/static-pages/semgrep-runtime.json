@@ -3,7 +3,7 @@
   "runtime": "semgrep",
   "platform": "linux/amd64",
   "baseImage": "semgrep/semgrep:1.176.0@sha256:d39aa8d8cdb7fd9e5ec14f0825e2356f902129778c9617217856295e553254d5",
-  "recipeSha256": "7b3ee0d255dd8fd25044cb07ea942c0a9143b2022267d11482ce402106805b39",
+  "recipeSha256": "f7ff4b72ebe2153a9baa073ecd696d228edc2f2e6561ec3fc61e9508ad150210",
   "expectedCoverage": [
     {
       "class": "lang-pkgs",
