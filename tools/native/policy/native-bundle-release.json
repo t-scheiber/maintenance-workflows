@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "repository": "t-scheiber/maintenance-workflows",
+  "assetId": 547257811,
+  "transportManifestSha256": "2b8524bd071220bf1927e3772630b047ac11f4f0dfcea4d7fbcb404a282ecbaa",
+  "image": "ghcr.io/t-scheiber/maintenance-node22@sha256:d1b5969e9da2c6e33e31bef573f545b295141cfe472014671266fae60d57df1a",
+  "imageConfig": "sha256:ca49327eeb7f23030ed01514f29e08f2bb6b9d54eaef2cd34d2ab7f61e65aefd",
+  "scanner": {
+    "version": "0.74.0+maintenance.1",
+    "sha256": "d60fd11532d37ffcfd73b71de9cd09159f337aaaf6ad7d28a0d9c8870d4657fc"
+  },
+  "releaseId": 383603888,
+  "immutable": true,
+  "source": {
+    "tag": "native-scanners-2026-09-06-r1",
+    "name": "native-scanners-20260906-linux-amd64.tar.gz"
+  }
+}

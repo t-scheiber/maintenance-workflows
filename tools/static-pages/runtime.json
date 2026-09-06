@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "status": "verified-public-runtime",
+  "image": "ghcr.io/t-scheiber/maintenance-node22@sha256:d1b5969e9da2c6e33e31bef573f545b295141cfe472014671266fae60d57df1a",
+  "provenance": {
+    "schema": 1,
+    "package": "ghcr.io/t-scheiber/maintenance-node22",
+    "platform": "linux/amd64",
+    "sourceRevision": "e66703c9920bdb235b0c5c9885dba9ed6569afbc",
+    "runId": "34009985581",
+    "runAttempt": 1,
+    "recipes": {
+      "Renovate.Dockerfile": "03c77f0b4fc14755e27bc65bf69fda6607198db6e2bff1f21f2d5c9c41be1e4a",
+      "Npm.Dockerfile": "1c23c1ea82093679aba8f1eb4df4333dd9ddb65631190fe8cba2570013a8a521",
+      "Node22.Dockerfile": "f22a0d69871d65558a7dac098a4ac5e0619a548aaca256b8a711c4294d8c102b"
+    },
+    "runtime": {
+      "node": "22.23.2",
+      "npm": "12.0.2",
+      "bun": "1.4.2",
+      "npmPatches": {
+        "brace-expansion": "5.0.9",
+        "ip-address": "10.3.1",
+        "tar": "7.5.21"
+      }
+    },
+    "publicationLabels": {
+      "source": "https://github.com/t-scheiber/renovate-config",
+      "description": "Personal maintenance runtime derived from Renovate, with Node.js 22.23.2 and patched npm 12.0.2. No private repository source included."
+    },
+    "imageId": "sha256:ca49327eeb7f23030ed01514f29e08f2bb6b9d54eaef2cd34d2ab7f61e65aefd",
+    "compression": "gzip",
+    "archiveBytes": 587003300,
+    "archiveSha256": "e2b7e0773e3da0ff9d6dc06c3fbea1665607f65f2989576ca06a6cce8ad6a013",
+    "expandedArchiveBytes": 1608107008,
+    "expandedArchiveSha256": "b944223935e092393f936a5cd462f3852ea57ebd0363759b0532bd8ff58a381c",
+    "scanSha256": "a4de94cd870aeaed80c382a5e9607f09ada9a014f4f216cf0e46af345fe56327",
+    "scanner": {
+      "name": "trivy",
+      "version": "0.74.0",
+      "scope": "complete-image",
+      "severity": [
+        "HIGH",
+        "CRITICAL"
+      ],
+      "result": "PASS"
+    },
+    "containsProjectSource": false,
+    "containsCentralSource": false,
+    "containsCredentials": false,
+    "image": "ghcr.io/t-scheiber/maintenance-node22@sha256:d1b5969e9da2c6e33e31bef573f545b295141cfe472014671266fae60d57df1a",
+    "anonymousPullVerified": true,
+    "activationReady": true
+  },
+  "runtime": {
+    "node": "22.23.2",
+    "npm": "12.0.2",
+    "bun": "1.4.2",
+    "npmPatches": {
+      "brace-expansion": "5.0.9",
+      "ip-address": "10.3.1",
+      "tar": "7.5.21"
+    }
+  },
+  "anonymousArchive": {
+    "publicationLabels": {
+      "source": "https://github.com/t-scheiber/renovate-config",
+      "description": "Personal maintenance runtime derived from Renovate, with Node.js 22.23.2 and patched npm 12.0.2. No private repository source included."
+    },
+    "imageId": "sha256:ca49327eeb7f23030ed01514f29e08f2bb6b9d54eaef2cd34d2ab7f61e65aefd",
+    "platform": "linux/amd64",
+    "compression": "gzip",
+    "archiveBytes": 533363779,
+    "archiveSha256": "3504d1e5c60859bd96c15dc4023d07b4e56179c8ec09ccc383ba9d416b9e8fb7",
+    "expandedArchiveBytes": 535714304,
+    "expandedArchiveSha256": "a8d1f8e8340ad9fc3a18e70a4c8787ad4ba23765814accc6d170e9b413d04934",
+    "scanSha256": "839d3cfc205ff80e2d5bfc44be0715891ce49a43d8d9b7e8001845af6757edd2"
+  }
+}

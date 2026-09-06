@@ -1,0 +1,129 @@
+name: Shared workflow verification
+on:
+  push:
+    branches: [main, 'renovate/**', 'automation/**']
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: shared-verification-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  policy:
+    name: shared/policy
+    if: github.repository == 't-scheiber/maintenance-workflows' && github.repository_id == '1359178236' && github.repository_owner_id == '66697291'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PUBLIC_REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+      PUBLIC_HEAD_REPOSITORY_ID: ${{ github.event.pull_request.head.repo.id }}
+    steps:
+      # First implementation bootstrap is an owner-authored signed PR, independently
+      # checked against its exact published manifest before normal protected merge.
+      # Non-owner PRs always use protected main helpers, with PR source kept separate.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login != 't-scheiber' && 'main' || github.sha }}
+          path: controls
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.20.0'
+      - name: Bind exact control checkout
+        run: echo "PUBLIC_TOOLS_REF=$(git -C controls rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Verify immutable scanner bundle and fresh complete native evidence
+        run: NODE_EXECUTABLE="$(command -v node)" python3 controls/tools/native/bundle/verify.py
+      - name: Require protected native source authority
+        run: node controls/tools/native/source-admission.mjs
+      - name: Prepare and fully scan source-free Node24 runtime
+        run: node controls/tools/static-pages/prepare-runtime.mjs node24
+      - name: Check out exact source as data with complete history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify source revision and complete history
+        run: |
+          test "$(git -C source rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C source rev-parse --is-shallow-repository)" = false
+      - name: Execute all dependency-free Node and Python tests offline
+        working-directory: source
+        run: node "$GITHUB_WORKSPACE/controls/tools/static-pages/control-tests.mjs"
+      - name: Validate actual workflows with admitted actionlint
+        working-directory: source
+        run: node "$GITHUB_WORKSPACE/controls/tools/static-pages/actionlint.mjs"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: shared-policy-evidence
+          path: |
+            ${{ runner.temp }}/control-tests
+            ${{ runner.temp }}/actionlint/receipt.json
+            ${{ runner.temp }}/actionlint/scan-receipt.json
+            ${{ runner.temp }}/actionlint/report.json
+            ${{ runner.temp }}/actionlint/stderr.log
+            ${{ runner.temp }}/actionlint/stdout.log
+            ${{ runner.temp }}/actionlint/lint-stderr.log
+            ${{ runner.temp }}/runtime-node24/receipt.json
+            ${{ runner.temp }}/native-bundle-verification/artifacts
+          retention-days: 7
+  scanners:
+    name: shared/scan-${{ matrix.scanner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        scanner: [osv, trivy, gitleaks, semgrep]
+    if: github.repository == 't-scheiber/maintenance-workflows' && github.repository_id == '1359178236' && github.repository_owner_id == '66697291'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PUBLIC_REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+      PUBLIC_HEAD_REPOSITORY_ID: ${{ github.event.pull_request.head.repo.id }}
+    steps:
+      # First implementation bootstrap is an owner-authored signed PR, independently
+      # checked against its exact published manifest before normal protected merge.
+      # Non-owner PRs always use protected main helpers, with PR source kept separate.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login != 't-scheiber' && 'main' || github.sha }}
+          path: controls
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.20.0'
+      - name: Bind exact control checkout
+        run: echo "PUBLIC_TOOLS_REF=$(git -C controls rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Verify immutable scanner bundle and fresh complete native evidence
+        run: NODE_EXECUTABLE="$(command -v node)" python3 controls/tools/native/bundle/verify.py
+      - name: Require protected native source authority
+        run: node controls/tools/native/source-admission.mjs
+      - name: Prepare and fully scan fixed source-free runtime
+        env:
+          RUNTIME_KIND: ${{ matrix.scanner == 'semgrep' && 'semgrep' || 'node24' }}
+        run: node controls/tools/static-pages/prepare-runtime.mjs "$RUNTIME_KIND"
+      - name: Check out exact source as data with complete history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify source revision and complete history
+        run: |
+          test "$(git -C source rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C source rev-parse --is-shallow-repository)" = false
+      - name: Scan complete source in admitted isolated container
+        id: scan
+        working-directory: source
+        env:
+          SCANNER: ${{ matrix.scanner }}
+        run: node "$GITHUB_WORKSPACE/controls/tools/static-pages/source-scanner.mjs" "$SCANNER"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && steps.scan.outputs.summary_path != ''
+        with:
+          name: shared-security-${{ matrix.scanner }}
+          path: ${{ steps.scan.outputs.summary_path }}
+          retention-days: 7
+          if-no-files-found: error

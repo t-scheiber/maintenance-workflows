@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "image": "personal-maintenance-node24:24.20.0",
+  "platform": "linux/amd64",
+  "nodeVersion": "v24.20.0",
+  "npmVersion": "12.0.2",
+  "baseImage": "ghcr.io/t-scheiber/maintenance-node22@sha256:d1b5969e9da2c6e33e31bef573f545b295141cfe472014671266fae60d57df1a",
+  "nodeArchiveSha256": "2f2c0da162318f0de47665410c7c8c2ed3d36c8f3105de4bbc61176c70a7cbf2",
+  "recipeSha256": "96e59e273de86340457862e3f3925755bb3658ff71330c7771ba6191e1cc77d8",
+  "expectedCoverage": [
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg",
+      "target": "Node.js",
+      "packages": 745,
+      "inventorySha256": "97f3aa7a24854792275d052a93bd44988d44c463e85888c42f65eba68918d65f"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "ubuntu",
+      "target": "operating-system",
+      "packages": 246,
+      "inventorySha256": "483e3dc7666aa4fdfb226fec32fe6f1f3e827ed32aa74525266ff04dfdab4312"
+    }
+  ]
+}

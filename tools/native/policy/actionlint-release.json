@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "state": "published",
+  "repository": "t-scheiber/maintenance-workflows",
+  "releaseId": 383640029,
+  "assetId": 547382486,
+  "tag": "actionlint-2026-09-06-r1",
+  "name": "actionlint-1.7.12-maintenance.1-linux-amd64.tar.gz",
+  "transportManifestSha256": "a0227779fbde2f53f6272afded27ef80053b9fd32c17bf58fb13c3098ad9c64c",
+  "binary": {
+    "path": "bin/actionlint",
+    "bytes": 8402983,
+    "sha256": "5643e67c6bd1a4b37f56e1dec1bd9f9bef37ff8371dd2034908bfde9f6f63947"
+  },
+  "scan": {
+    "packages": 13,
+    "inventorySha256": "79b11b844648dfb0f1612c2a56be817efbb727a5081f8b7829ddce3b2476a82e",
+    "scannerVersion": "0.74.0+maintenance.1",
+    "scannerSha256": "d60fd11532d37ffcfd73b71de9cd09159f337aaaf6ad7d28a0d9c8870d4657fc"
+  },
+  "scope": {
+    "coreTests": "PASS",
+    "fullDeveloperSuite": "BLOCK",
+    "generatorPackagesLinked": false,
+    "sourceCommit": "914e7df21a07ef503a81201c76d2b11c789d3fca"
+  },
+  "immutable": true
+}

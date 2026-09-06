@@ -1,0 +1,319 @@
+name: Shared validated static Pages
+on:
+  workflow_call:
+    inputs:
+      tools_ref:
+        required: true
+        type: string
+permissions: {}
+jobs:
+  admit:
+    if: github.repository_owner_id == '66697291' && ((github.repository == 't-scheiber/AK_WeatherApp' && github.repository_id == '755321462') || (github.repository == 't-scheiber/ScheiberVueAppAbgabe' && github.repository_id == '755319788')) && github.ref == 'refs/heads/main' && vars.STATIC_PAGES_ENABLED == 'true' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.actor == 't-scheiber' && github.triggering_actor == 't-scheiber'))
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      tools_ref: ${{ steps.caller.outputs.tools_ref }}
+      repository_name: ${{ steps.caller.outputs.repository_name }}
+    steps:
+      - name: Check out source as data
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: source
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify exact source revision
+        run: test "$(git -C source rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Verify caller and paired pins before any tools execution
+        id: caller
+        env:
+          TOOLS_REF: ${{ inputs.tools_ref }}
+          CALLER_WORKFLOW_SHA: ${{ github.workflow_sha }}
+          CALLER_WORKFLOW_REF: ${{ github.workflow_ref }}
+          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          STATIC_PAGES_ENABLED: ${{ vars.STATIC_PAGES_ENABLED }}
+        run: |
+          python3 - <<'PY'
+          """Bootstrap admission, embedded verbatim in the immutable reusable workflow.
+          No code from a tools_ref checkout runs before this verifies the caller pin.
+          """
+          import os
+          from pathlib import Path
+          import re
+          import subprocess
+          
+          COMPANION = 't-scheiber/maintenance-workflows'
+          TARGETS = {'t-scheiber/AK_WeatherApp':'755321462','t-scheiber/ScheiberVueAppAbgabe':'755319788'}
+          
+          def caller(repository, revision):
+              if repository not in TARGETS or not re.fullmatch('[a-f0-9]{40}', revision):
+                  raise RuntimeError('Invalid fixed caller identity')
+              return f'''name: Publish validated static Pages
+          on:
+            push:
+              branches: [main]
+            workflow_dispatch:
+          permissions:
+            contents: read
+          concurrency:
+            group: static-pages
+            cancel-in-progress: false
+          jobs:
+            pages:
+              if: github.repository == '{repository}' && github.ref == 'refs/heads/main' && vars.STATIC_PAGES_ENABLED == 'true'
+              permissions:
+                contents: read
+                pages: write
+                id-token: write
+              uses: {COMPANION}/.github/workflows/static-pages.yml@{revision}
+              with:
+                tools_ref: '{revision}'
+          '''
+          
+          def admit(env, content, actual_head):
+              repo, revision = env.get('GITHUB_REPOSITORY'), env.get('TOOLS_REF')
+              if repo not in TARGETS or env.get('GITHUB_REPOSITORY_ID') != TARGETS[repo] or env.get('GITHUB_REPOSITORY_OWNER_ID') != '66697291' or env.get('REPOSITORY_PRIVATE') != 'false':
+                  raise RuntimeError('Only fixed public personal repositories are admitted')
+              if not isinstance(revision,str) or not re.fullmatch('[a-f0-9]{40}',revision) or revision == '0'*40:
+                  raise RuntimeError('A real immutable shared release is required')
+              sha=env.get('GITHUB_SHA')
+              if not isinstance(sha,str) or not re.fullmatch('[a-f0-9]{40}',sha) or actual_head != sha or env.get('CALLER_WORKFLOW_SHA') != sha or env.get('CALLER_WORKFLOW_REF') != repo+'/.github/workflows/pages.yml@refs/heads/main':
+                  raise RuntimeError('Caller source and workflow revisions differ')
+              if env.get('DEFAULT_BRANCH') != 'main' or env.get('GITHUB_REF') != 'refs/heads/main' or env.get('STATIC_PAGES_ENABLED') != 'true':
+                  raise RuntimeError('Pages is disabled or the branch is not main')
+              if env.get('GITHUB_EVENT_NAME') != 'push' and not (env.get('GITHUB_EVENT_NAME') == 'workflow_dispatch' and env.get('GITHUB_ACTOR') == 't-scheiber' and env.get('GITHUB_TRIGGERING_ACTOR') == 't-scheiber'):
+                  raise RuntimeError('Unapproved Pages event')
+              if not isinstance(content,str) or content != caller(repo, revision):
+                  raise RuntimeError('Caller permissions, source or paired immutable pin differ')
+              return {'tools_ref':revision,'repository_name':repo.split('/')[1]}
+          
+          if __name__ == '__main__':
+              source=Path(os.environ['GITHUB_WORKSPACE'])/'source'
+              filename=source/'.github/workflows/pages.yml'
+              if any(p.is_symlink() for p in [source,source/'.github',filename.parent,filename]) or not filename.is_file() or filename.stat().st_size>4096:
+                  raise RuntimeError('Caller must be a bounded regular file')
+              head=subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=True,timeout=10).strip()
+              result=admit(os.environ,filename.read_text(),head)
+              with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+                  out.write(''.join(key+'='+value+'\n' for key,value in result.items()))
+          PY
+  build:
+    needs: admit
+    permissions:
+      contents: read
+    env:
+      PUBLIC_REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+      PUBLIC_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      STATIC_PAGES_ENABLED: ${{ vars.STATIC_PAGES_ENABLED }}
+      PUBLIC_TOOLS_REF: ${{ needs.admit.outputs.tools_ref }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      archive_sha256: ${{ steps.build.outputs.archive_sha256 }}
+      artifact_id: ${{ steps.artifact.outputs.artifact-id }}
+    steps:
+      - name: Check out the admitted immutable public tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: t-scheiber/maintenance-workflows
+          ref: ${{ needs.admit.outputs.tools_ref }}
+          path: controls
+          persist-credentials: false
+      - name: Verify immutable tool checkout
+        env:
+          TOOLS_REF: ${{ needs.admit.outputs.tools_ref }}
+        run: test "$(git -C controls rev-parse HEAD)" = "$TOOLS_REF"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.20.0'
+      - name: Verify immutable scanner bundle and fresh complete native evidence
+        run: NODE_EXECUTABLE="$(command -v node)" python3 controls/tools/native/bundle/verify.py
+      - name: Require protected native source authority
+        run: node controls/tools/native/source-admission.mjs
+      - name: Prepare and fully scan fixed source-free runtime
+        env:
+          RUNTIME_KIND: node22
+        run: node controls/tools/static-pages/prepare-runtime.mjs "$RUNTIME_KIND"
+      - name: Check out source as data
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: source
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify exact source revision
+        run: test "$(git -C source rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Validate project offline using the exact scanned Node 22 image
+        id: build
+        working-directory: source
+        run: node "$GITHUB_WORKSPACE/controls/tools/static-pages/pages-build.mjs"
+      - id: artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: static-dist
+          path: ${{ runner.temp }}/static-dist.tar
+          retention-days: 1
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: static-build-receipt
+          path: |
+            ${{ runner.temp }}/build-receipt.json
+            ${{ runner.temp }}/runtime-node22/receipt.json
+            ${{ runner.temp }}/runtime-node22/report.json
+            ${{ runner.temp }}/runtime-node22/stderr.log
+            ${{ runner.temp }}/runtime-coverage.json
+            ${{ runner.temp }}/native-bundle-verification/artifacts/summary.json
+          retention-days: 7
+  security:
+    needs: admit
+    permissions:
+      contents: read
+    env:
+      PUBLIC_REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+      PUBLIC_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      STATIC_PAGES_ENABLED: ${{ vars.STATIC_PAGES_ENABLED }}
+      PUBLIC_TOOLS_REF: ${{ needs.admit.outputs.tools_ref }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        scanner: [osv, trivy, gitleaks, semgrep]
+    steps:
+      - name: Check out the admitted immutable public tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: t-scheiber/maintenance-workflows
+          ref: ${{ needs.admit.outputs.tools_ref }}
+          path: controls
+          persist-credentials: false
+      - name: Verify immutable tool checkout
+        env:
+          TOOLS_REF: ${{ needs.admit.outputs.tools_ref }}
+        run: test "$(git -C controls rev-parse HEAD)" = "$TOOLS_REF"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.20.0'
+      - name: Verify immutable scanner bundle and fresh complete native evidence
+        run: NODE_EXECUTABLE="$(command -v node)" python3 controls/tools/native/bundle/verify.py
+      - name: Require protected native source authority
+        run: node controls/tools/native/source-admission.mjs
+      - name: Prepare and fully scan fixed source-free runtime
+        env:
+          RUNTIME_KIND: ${{ matrix.scanner == 'semgrep' && 'semgrep' || 'node24' }}
+        run: node controls/tools/static-pages/prepare-runtime.mjs "$RUNTIME_KIND"
+      - name: Check out source as data
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact source revision
+        run: test "$(git -C source rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Verify complete exact-head checkout
+        run: test "$(git -C source rev-parse --is-shallow-repository)" = false
+      - name: Scan without executing project code or honoring source exemptions
+        id: scan
+        working-directory: source
+        env:
+          SCANNER: ${{ matrix.scanner }}
+        run: node "$GITHUB_WORKSPACE/controls/tools/static-pages/source-scanner.mjs" "$SCANNER"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always() && steps.scan.outputs.summary_path != ''
+        with:
+          name: static-security-${{ matrix.scanner }}
+          path: ${{ steps.scan.outputs.summary_path }}
+          retention-days: 7
+          if-no-files-found: error
+  package:
+    needs: [admit, build, security]
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the admitted immutable public tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: t-scheiber/maintenance-workflows
+          ref: ${{ needs.admit.outputs.tools_ref }}
+          path: controls
+          persist-credentials: false
+      - name: Verify immutable tool checkout
+        env:
+          TOOLS_REF: ${{ needs.admit.outputs.tools_ref }}
+        run: test "$(git -C controls rev-parse HEAD)" = "$TOOLS_REF"
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: incoming
+          merge-multiple: true
+      - name: Match same-run artifact before processing
+        env:
+          EXPECTED_ARCHIVE_SHA256: ${{ needs.build.outputs.archive_sha256 }}
+        run: |
+          python3 - <<'PY'
+          import hashlib,os,pathlib,re
+          p=pathlib.Path('incoming/static-dist.tar')
+          expected=os.environ['EXPECTED_ARCHIVE_SHA256']
+          if p.is_symlink() or not p.is_file() or p.stat().st_size>11_000_000 or not re.fullmatch('[a-f0-9]{64}',expected) or hashlib.sha256(p.read_bytes()).hexdigest()!=expected:raise RuntimeError('Build artifact identity differs')
+          PY
+      - name: Package bounded demo files without executing source
+        env:
+          PAGES_REPOSITORY: ${{ needs.admit.outputs.repository_name }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: python3 controls/tools/static-pages/pages-artifact.py package incoming/static-dist.tar pages
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          path: pages
+  deploy:
+    needs: [admit, package]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Reject stale queued deployment before Pages receives credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$TARGET_REPOSITORY" --jq '.default_branch')" = main
+          test "$(gh api "repos/$TARGET_REPOSITORY/git/ref/heads/main" --jq '.object.sha')" = "$GITHUB_SHA"
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+  smoke:
+    needs: [admit, deploy]
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the admitted immutable public tools
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: t-scheiber/maintenance-workflows
+          ref: ${{ needs.admit.outputs.tools_ref }}
+          path: controls
+          persist-credentials: false
+      - name: Verify immutable tool checkout
+        env:
+          TOOLS_REF: ${{ needs.admit.outputs.tools_ref }}
+        run: test "$(git -C controls rev-parse HEAD)" = "$TOOLS_REF"
+      - name: Verify exact published revision, every asset hash and empty configuration
+        env:
+          PAGES_REPOSITORY: ${{ needs.admit.outputs.repository_name }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: python3 controls/tools/static-pages/pages-artifact.py smoke

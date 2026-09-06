@@ -1,0 +1,210 @@
+{
+  "version": 1,
+  "state": "protected-control-plane",
+  "repository": "t-scheiber/renovate-config",
+  "hostedProof": {
+    "sourceCommit": "fe2f84c40593287234d8e7a9d6b0c04138654ee9",
+    "workflowPath": ".github/workflows/verify-native-bundle.yml",
+    "runId": "34043216267",
+    "runAttempt": 1,
+    "conclusion": "success",
+    "event": "workflow_dispatch",
+    "ref": "refs/heads/main",
+    "actor": "t-scheiber",
+    "triggeringActor": "t-scheiber",
+    "artifactId": "9992365452",
+    "artifactDigest": "ad7bb6737763ae0fbe5ca0a88524a7828b9da01ef1043deef2a7ce1cae57d5f2",
+    "artifactBytes": 7726215,
+    "summarySha256": "1a927db52b430cdd618be51b967ca4f76b2443a636db034a43adf80c952eda1b",
+    "verificationReceiptSha256": "2d33818ee01f810a58b9fee17365059d3f17f7b62135b28a0b07ca94a9ba42b5"
+  },
+  "transport": {
+    "manifestSha256": "2b8524bd071220bf1927e3772630b047ac11f4f0dfcea4d7fbcb404a282ecbaa",
+    "archiveSha256": "7ddcdefc8bbac157623353b56944171b0c16899afbf7c36c1b59af8c86c742ec",
+    "assetId": 547257811
+  },
+  "records": {
+    "gitleaks": {
+      "record": {
+        "version": 1,
+        "state": "protected",
+        "tool": "gitleaks",
+        "source": {
+          "repository": "gitleaks/gitleaks",
+          "commit": "83d9cd684c87d95d656c1458ef04895a7f1cbd8e",
+          "files": 451
+        },
+        "binary": {
+          "sha256": "e34b17d7ec331e0c15aec68b5521ef54b70c39e939469850d98802afaa574424",
+          "bytes": 22212770
+        },
+        "compiler": "go1.26.8",
+        "mainModule": "github.com/zricethezav/gitleaks/v8",
+        "mainPath": "github.com/zricethezav/gitleaks/v8",
+        "buildSettings": {
+          "-buildmode": "exe",
+          "-compiler": "gc",
+          "-tags": "gore2regex",
+          "-trimpath": "true",
+          "CGO_ENABLED": "0",
+          "GOARCH": "amd64",
+          "GOOS": "linux",
+          "GOAMD64": "v1"
+        },
+        "graph": {
+          "packages": 416
+        },
+        "pclntab": {
+          "inspectorSha256": "1f9185fb79b58bd35e472dc35417f088156e4fb674cfa47a29be4629a0de2bc3",
+          "functions": 19746,
+          "functionNamesSha256": "e5bf838304656361742cb23335e973283698e1ef702dd6c2aa14312c5a6a9989",
+          "maintainedFunctions": 0
+        },
+        "evidence": {
+          "graph": "9a7c9e204d139b4d2d46e74cedc15ce50c7c1fdcbe8737b40f70e8afb766a7b5",
+          "manifest": "b8ad7e03931e4fbacd520eee10b1fe1ae2e8aff32e3ea719036516900b905fa6",
+          "buildInfo": "cb5483cd2484935d370df02782dcf0b3cc7c684a836c41344083e3aa595959ba",
+          "pclntab": "83fbd43682eba3b05f87bdd562978c0395d6fd07653618f873dfdac2fe6f595c",
+          "advisory": "f277b0400996200a7d5034c676661cd8cf18adeab1fdc5d0dc369e456ddf1fad",
+          "provenance": "f8255da0c30b3e57f1fc4f7285bcb858db8d8558e1ade0c1ba53ba427495f2e6"
+        },
+        "scan": {
+          "target": "gitleaks",
+          "artifactName": "/input",
+          "scannerVersion": "0.74.0+maintenance.1",
+          "scannerSha256": "d60fd11532d37ffcfd73b71de9cd09159f337aaaf6ad7d28a0d9c8870d4657fc",
+          "runtimeConfig": "sha256:ca49327eeb7f23030ed01514f29e08f2bb6b9d54eaef2cd34d2ab7f61e65aefd",
+          "packages": 65,
+          "inventorySha256": "745e130456c249f7feb89fea7dafdc15352034da299f5ae4f9cb7119ef07bfbb",
+          "findingSha256": "130d4f10a3e213b3c7f05e02db054e75c80233e85f66d79a760be5035a2542b3",
+          "vendorWarnings": 1,
+          "maxAgeMs": 3600000
+        },
+        "controlPlaneRepository": "t-scheiber/renovate-config",
+        "controlPlaneCommit": "fe2f84c40593287234d8e7a9d6b0c04138654ee9"
+      },
+      "recordSha256": "0191b806de39ccfea3893f6844a7e45da981673b05a0cf461f981e2230445e8f"
+    },
+    "osv-scanner": {
+      "record": {
+        "version": 1,
+        "state": "protected",
+        "tool": "osv-scanner",
+        "source": {
+          "repository": "google/osv-scanner",
+          "commit": "c84fa4568f2526d0333e9a914ea8a0a5f74ad68b",
+          "files": 793
+        },
+        "binary": {
+          "sha256": "70d3d5e35dabc81d80e3c6d12db0297aa4ea948431adcb73ba51ba61a6dc4e2b",
+          "bytes": 81508019
+        },
+        "compiler": "go1.26.8",
+        "mainModule": "github.com/google/osv-scanner/v2",
+        "mainPath": "github.com/google/osv-scanner/v2/cmd/osv-scanner",
+        "buildSettings": {
+          "-buildmode": "exe",
+          "-compiler": "gc",
+          "-trimpath": "true",
+          "CGO_ENABLED": "0",
+          "GOARCH": "amd64",
+          "GOOS": "linux",
+          "GOAMD64": "v1"
+        },
+        "graph": {
+          "packages": 1484
+        },
+        "pclntab": {
+          "inspectorSha256": "1f9185fb79b58bd35e472dc35417f088156e4fb674cfa47a29be4629a0de2bc3",
+          "functions": 61971,
+          "functionNamesSha256": "dbd00afd359cba5f7f26eba55923e8b56431cfe2b2d3b33ff988dd9b78e8f96e",
+          "maintainedFunctions": 88
+        },
+        "evidence": {
+          "graph": "703a568c553b93a822bb5d5ccc3d7fc0064e410de3676ee1aa5815177966545f",
+          "manifest": "8fccf51e732ec464864000be3af1f4abd68ccf1dd7f9123257a1ee7df162a040",
+          "buildInfo": "731a25df956e529463dbb4a83d4b30de22c3c4c7d479e97d85efc51ec98dfbf1",
+          "pclntab": "74ca586d02225f86088433c1cd218be5de37de8f9a76acf5c3aeba3da9079458",
+          "advisory": "f277b0400996200a7d5034c676661cd8cf18adeab1fdc5d0dc369e456ddf1fad",
+          "provenance": "0979b459074d0dafd7a4276575641d307c1299a185215ff3c40191aac5c6bdc2"
+        },
+        "scan": {
+          "target": "osv-scanner",
+          "artifactName": "/input",
+          "scannerVersion": "0.74.0+maintenance.1",
+          "scannerSha256": "d60fd11532d37ffcfd73b71de9cd09159f337aaaf6ad7d28a0d9c8870d4657fc",
+          "runtimeConfig": "sha256:ca49327eeb7f23030ed01514f29e08f2bb6b9d54eaef2cd34d2ab7f61e65aefd",
+          "packages": 193,
+          "inventorySha256": "7d3aa9b4f43ccac6cdacabc468cec772effcf452a76ee38a94aed6ab29734dc6",
+          "findingSha256": "924cf545fd756213da4f7ff9db1f8779b4ff2083dac4ab6dcfa6bd90302ccd5a",
+          "vendorWarnings": 1,
+          "maxAgeMs": 3600000
+        },
+        "controlPlaneRepository": "t-scheiber/renovate-config",
+        "controlPlaneCommit": "fe2f84c40593287234d8e7a9d6b0c04138654ee9"
+      },
+      "recordSha256": "c91806804cf14de880bc94c0c494e34cfe63f7f4cc9789d6e0b8948e94281db1"
+    },
+    "trivy": {
+      "record": {
+        "version": 1,
+        "state": "protected",
+        "tool": "trivy",
+        "source": {
+          "repository": "aquasecurity/trivy",
+          "commit": "e1fd17a0ea4a8cf24bc4b4dd7e2cfbf4bb31b994",
+          "files": 3365
+        },
+        "binary": {
+          "sha256": "d60fd11532d37ffcfd73b71de9cd09159f337aaaf6ad7d28a0d9c8870d4657fc",
+          "bytes": 168292514
+        },
+        "compiler": "go1.26.8-X:jsonv2",
+        "mainModule": "github.com/aquasecurity/trivy",
+        "mainPath": "github.com/aquasecurity/trivy/cmd/trivy",
+        "buildSettings": {
+          "-buildmode": "exe",
+          "-compiler": "gc",
+          "-trimpath": "true",
+          "CGO_ENABLED": "0",
+          "GOARCH": "amd64",
+          "GOEXPERIMENT": "jsonv2",
+          "GOOS": "linux",
+          "GOAMD64": "v1"
+        },
+        "graph": {
+          "packages": 3084
+        },
+        "pclntab": {
+          "inspectorSha256": "1f9185fb79b58bd35e472dc35417f088156e4fb674cfa47a29be4629a0de2bc3",
+          "functions": 193161,
+          "functionNamesSha256": "2e3538e215ffc323afb3d3cc5e380b8d15a75bb2d07908bb28c5d1e185ccecde",
+          "maintainedFunctions": 516
+        },
+        "evidence": {
+          "graph": "bc1a4081a7dcdf821f7233e5d40af9d21fd4960659d0f24e00e0a2002bc58954",
+          "manifest": "24f9861379f220624444b41a5db171862e86d7c4efd517dd0ea802b79903b9f2",
+          "buildInfo": "66fe885ca7ce2847f03ac039b2f101cd2525a5be2c26e11f96b141fe7b20f265",
+          "pclntab": "7620ec4a62b3a076ba8e51cbfccc72c6ab7cc6061d3dd8a178ce4b1f2da79a37",
+          "advisory": "f277b0400996200a7d5034c676661cd8cf18adeab1fdc5d0dc369e456ddf1fad",
+          "provenance": "0c1314f2f95c2a0e0537fee0e88f68d6121a8aab23bf75c19410f60bbee4296d"
+        },
+        "scan": {
+          "target": "trivy",
+          "artifactName": "/input",
+          "scannerVersion": "0.74.0+maintenance.1",
+          "scannerSha256": "d60fd11532d37ffcfd73b71de9cd09159f337aaaf6ad7d28a0d9c8870d4657fc",
+          "runtimeConfig": "sha256:ca49327eeb7f23030ed01514f29e08f2bb6b9d54eaef2cd34d2ab7f61e65aefd",
+          "packages": 377,
+          "inventorySha256": "236950f825f507f3ba3cfb47de2ffd93adc62cd86dc88c5a472b7661be6911b5",
+          "findingSha256": "14ce6b67839f14cbaff00e5989c84019bdc5f6d9d439a05330ccd1bde1457bd0",
+          "vendorWarnings": 1,
+          "maxAgeMs": 3600000
+        },
+        "controlPlaneRepository": "t-scheiber/renovate-config",
+        "controlPlaneCommit": "fe2f84c40593287234d8e7a9d6b0c04138654ee9"
+      },
+      "recordSha256": "b96e5f36e2cd303cc8885cbb838a62baeae0ab6d55e85a2d524abb3033b1142f"
+    }
+  }
+}
