@@ -1,0 +1,289 @@
+{
+  "version": 1,
+  "archiveBytes": 4435638,
+  "archiveSha256": "907f3d41ffb3061bbdc506daf4b960ee45287f5601e9e87e5cd3de39b6d28a70",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2614,
+      "sha256": "ce53067b9d00dba15b53845f066756ba55f96012d28dc38ae3b91d223159c8d9",
+      "mode": 420
+    },
+    {
+      "path": "REBUILD.md",
+      "bytes": 3144,
+      "sha256": "0f2af5763a49674bf43ad8b0786c01478707dfbc06c3b779dcb627318d6f824e",
+      "mode": 420
+    },
+    {
+      "path": "bin/actionlint",
+      "bytes": 8402983,
+      "sha256": "5643e67c6bd1a4b37f56e1dec1bd9f9bef37ff8371dd2034908bfde9f6f63947",
+      "mode": 493
+    },
+    {
+      "path": "evidence/behavior.json",
+      "bytes": 2385,
+      "sha256": "dd678fbc2cc6fae02f0710a63ff09aed7d7b90dc602ec6a4cfd572c21856c8c8",
+      "mode": 420
+    },
+    {
+      "path": "evidence/build-info.txt",
+      "bytes": 1221,
+      "sha256": "0224a157118f361d97b38d940da3920c8ecc8437ca647cc7e8cb98257ba0c2ec",
+      "mode": 420
+    },
+    {
+      "path": "evidence/compiled-scope.json",
+      "bytes": 677,
+      "sha256": "1ec84d64909039b1e62b504db8ca5c289abb9f7e1075cef0becf38b9724e1390",
+      "mode": 420
+    },
+    {
+      "path": "evidence/core-tests.json",
+      "bytes": 387,
+      "sha256": "97d527270a8b908deb018d694597cc0f76cf89e74fde54540dc8da027a337d34",
+      "mode": 420
+    },
+    {
+      "path": "evidence/execution.json",
+      "bytes": 940,
+      "sha256": "b56c75b3b9b599fb54ba2d3bcdaf047361235c405f691b2342743391295e5a6a",
+      "mode": 420
+    },
+    {
+      "path": "evidence/full-test-summary.json",
+      "bytes": 2647,
+      "sha256": "ae86db7dc7c80bd0ffa8b4a51c2b9b06d8e5506839f4884386e01095a2b68aa7",
+      "mode": 420
+    },
+    {
+      "path": "evidence/package-graph.json",
+      "bytes": 203989,
+      "sha256": "bedaf2e0ff34b5d670257d744a4dac711c7043ef9cce50304d2f8130db813f53",
+      "mode": 420
+    },
+    {
+      "path": "evidence/provenance.json",
+      "bytes": 1372,
+      "sha256": "207b5dd968e30a9385dd062794ff2392b3c10ec1ccbfbc7bb14d1d534fc336ee",
+      "mode": 420
+    },
+    {
+      "path": "evidence/report.json",
+      "bytes": 5348,
+      "sha256": "07b27893e08e4e5259019e3712ea9cd0a29c0d31e195d50401b3e11e27ba94aa",
+      "mode": 420
+    },
+    {
+      "path": "evidence/retained-source-advisory.json",
+      "bytes": 992,
+      "sha256": "3849eb239e1d05e9f9b0641744069f767b048b06ec3bd4711639717f1331b395",
+      "mode": 420
+    },
+    {
+      "path": "evidence/scan-validation.json",
+      "bytes": 997,
+      "sha256": "e5e785e294bb927f45b1a9abbbc9de1c39f4508fe50ff499bbcbc14afafcac45",
+      "mode": 420
+    },
+    {
+      "path": "evidence/stderr.log",
+      "bytes": 199,
+      "sha256": "e75bcfdeabc3be330872c4dd326da48df43d5855172cd7d9a4ff003399403a8e",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/api.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/emitter.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/parser.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/reader.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/scanner.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/writer.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/yaml.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/libyaml/yamlprivate.go.txt",
+      "bytes": 1162,
+      "sha256": "0199747423951a15e6a7b36569ddfc05b023a6a26d61d50b5ac75ab022e9e04a",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/unicode/LICENSE.txt",
+      "bytes": 1995,
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "mode": 420
+    },
+    {
+      "path": "notices/embedded/unicode/Unicode17-ReadMe.txt",
+      "bytes": 740,
+      "sha256": "9fe1a90bd32659d7953616283dc2bffaa165518aae9ace026040c42c559ba606",
+      "mode": 420
+    },
+    {
+      "path": "notices/go/LICENSE",
+      "bytes": 1453,
+      "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+      "mode": 420
+    },
+    {
+      "path": "notices/go/PATENTS",
+      "bytes": 1303,
+      "sha256": "96f408bfae65bf137fc2525d3ecb030271c50c1e90799f87abf8846d8dd505cc",
+      "mode": 420
+    },
+    {
+      "path": "notices/index.json",
+      "bytes": 10119,
+      "sha256": "3386730f5c004fcb9e9802ca4343174cef066efec8748e8aefe6d7e7664b52fb",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/01/LICENSE",
+      "bytes": 1078,
+      "sha256": "2391eb152e1f700051c1618a7aaa7ad86186585190ca9a30e7579c9b9d459332",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/02/LICENSE",
+      "bytes": 1069,
+      "sha256": "07e9e3daaccc707c9b7d535ed1405a65d37919fdd42197fe55e68820e974688c",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/03/LICENSE.md",
+      "bytes": 1079,
+      "sha256": "de95ed802d2f90e3c72cb3c9a927cca5f2aec234a3ef1250232db0f8178b2d93",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/04/LICENSE",
+      "bytes": 1085,
+      "sha256": "88a2379b3ca34bf5c57127aff9dcb802bbb60ece0805cdbda65b3bd115f971d9",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/05/LICENSE",
+      "bytes": 1099,
+      "sha256": "08eab1118c80885fa1fa6a6dd7303f65a379fcb3733e063d20d1bbc2c76e6fa1",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/06/LICENSE",
+      "bytes": 1085,
+      "sha256": "88a2379b3ca34bf5c57127aff9dcb802bbb60ece0805cdbda65b3bd115f971d9",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/07/LICENSE",
+      "bytes": 1085,
+      "sha256": "dce57e2906b8ebfc7a0978105aac3082ddceb8a1f673bec71b9c8dc5df51c5d7",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/08/LICENSE",
+      "bytes": 1092,
+      "sha256": "8f650581478707182f3306d9a86676d4e03e2d4edc868344378cf4d6fe6c927a",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/09/LICENSE",
+      "bytes": 11365,
+      "sha256": "4a4e095045f46875715234a884741acd2b61b88959d6f47a243ae03ef95c4e76",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/09/NOTICE",
+      "bytes": 708,
+      "sha256": "eaecbd48a908defec5acc088247b82d1fc1eb21d5b450348c25429bba42d9001",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/10/LICENSE",
+      "bytes": 1453,
+      "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+      "mode": 420
+    },
+    {
+      "path": "notices/modules/11/LICENSE",
+      "bytes": 1453,
+      "sha256": "911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+      "mode": 420
+    },
+    {
+      "path": "notices/upstream/LICENSE.txt",
+      "bytes": 1067,
+      "sha256": "03a26b06d224380a02bf100e05fff3b2dfc71b14d4e2fa685ec9963a87563c22",
+      "mode": 420
+    },
+    {
+      "path": "source/candidate-manifest.json",
+      "bytes": 224037,
+      "sha256": "4253fedc4a38f1529e61a4c7a9a66b7d3e3dd9c981e2e4270e330e1c5135f13d",
+      "mode": 420
+    },
+    {
+      "path": "source/changes.patch",
+      "bytes": 3683,
+      "sha256": "2019cbc51d05cd5562485911a23d9a1651b1ea3a2c64b13591e6be43421b51bf",
+      "mode": 420
+    },
+    {
+      "path": "source/error_test.go",
+      "bytes": 15576,
+      "sha256": "60b4e33eeca16430ac2c58ef16c246df694d881c6356640d93dac8ea8b0c0864",
+      "mode": 420
+    },
+    {
+      "path": "source/go.mod",
+      "bytes": 618,
+      "sha256": "274be589ebd3a92d8f8733542587a8147640ddcb2893e80dac5a7c67f80fe411",
+      "mode": 420
+    },
+    {
+      "path": "source/go.sum",
+      "bytes": 3852,
+      "sha256": "339f8e72336f9512a4496e279e559a61ad15908e279679c76403da08294b5641",
+      "mode": 420
+    },
+    {
+      "path": "source/upstream-manifest.json",
+      "bytes": 202466,
+      "sha256": "bf1f748b7813495e33bbd69cd6af72f0cf71c8af404e24a9b766754f6468f12d",
+      "mode": 420
+    }
+  ]
+}

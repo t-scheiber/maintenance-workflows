@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "runtime": "semgrep",
+  "platform": "linux/amd64",
+  "baseImage": "semgrep/semgrep:1.176.0@sha256:d39aa8d8cdb7fd9e5ec14f0825e2356f902129778c9617217856295e553254d5",
+  "recipeSha256": "f7ff4b72ebe2153a9baa073ecd696d228edc2f2e6561ec3fc61e9508ad150210",
+  "expectedCoverage": [
+    {
+      "class": "lang-pkgs",
+      "type": "python-pkg",
+      "target": "Python",
+      "packages": 65,
+      "inventorySha256": "fcc18b99cb4988ba7d1c17fa091f4b8fd1bff424c65948b5370828250f08e4af"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "alpine",
+      "target": "operating-system",
+      "packages": 65,
+      "inventorySha256": "53310c636c52a8857b8c0c36ac1820735686cfd2645c5d398bf64186aae54a88"
+    }
+  ],
+  "os": {
+    "family": "alpine",
+    "name": "3.23.5"
+  },
+  "requiredTargets": [
+    {
+      "class": "os-pkgs",
+      "type": "alpine"
+    },
+    {
+      "class": "lang-pkgs",
+      "type": "python-pkg"
+    }
+  ],
+  "requiredPackages": [
+    {
+      "class": "lang-pkgs",
+      "type": "python-pkg",
+      "name": "semgrep",
+      "version": "1.176.0",
+      "filePath": "usr/lib/python3.12/site-packages/semgrep-1.176.0.dist-info/METADATA"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "alpine",
+      "name": "curl",
+      "version": "8.22.0-r0"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "alpine",
+      "name": "libcurl",
+      "version": "8.22.0-r0"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "alpine",
+      "name": "jq",
+      "version": "1.8.2-r0"
+    }
+  ],
+  "priorLocalConfig": "sha256:f280eb213f590c3f9ab81eebc8c289425fd4244f1a98635b7c9e434db3bb291d",
+  "sameImageRequired": false,
+  "requireFreshCompleteScan": true
+}

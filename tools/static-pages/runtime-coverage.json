@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "imageId": "sha256:ca49327eeb7f23030ed01514f29e08f2bb6b9d54eaef2cd34d2ab7f61e65aefd",
+  "platform": "linux/amd64",
+  "os": {
+    "family": "ubuntu",
+    "name": "24.04"
+  },
+  "scanner": {
+    "name": "trivy",
+    "version": "0.74.0"
+  },
+  "expectedCoverage": [
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg",
+      "target": "Node.js",
+      "packages": 745,
+      "inventorySha256": "97f3aa7a24854792275d052a93bd44988d44c463e85888c42f65eba68918d65f"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "ubuntu",
+      "target": "operating-system",
+      "packages": 246,
+      "inventorySha256": "483e3dc7666aa4fdfb226fec32fe6f1f3e827ed32aa74525266ff04dfdab4312"
+    }
+  ],
+  "requiredTargets": [
+    {
+      "class": "os-pkgs",
+      "type": "ubuntu"
+    },
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg"
+    }
+  ],
+  "requiredPackages": [
+    {
+      "class": "os-pkgs",
+      "type": "ubuntu",
+      "name": "ca-certificates",
+      "version": "20260601~24.04.1",
+      "id": "ca-certificates@20260601~24.04.1"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "ubuntu",
+      "name": "libc6",
+      "version": "2.39",
+      "id": "libc6@2.39-0ubuntu8.8"
+    },
+    {
+      "class": "os-pkgs",
+      "type": "ubuntu",
+      "name": "openssl",
+      "version": "3.0.13",
+      "id": "openssl@3.0.13-0ubuntu3.15"
+    },
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg",
+      "name": "brace-expansion",
+      "version": "5.0.9",
+      "filePath": "usr/local/maintenance-npm/node_modules/brace-expansion/package.json"
+    },
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg",
+      "name": "ip-address",
+      "version": "10.3.1",
+      "filePath": "usr/local/maintenance-npm/node_modules/ip-address/package.json"
+    },
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg",
+      "name": "npm",
+      "version": "12.0.2",
+      "filePath": "usr/local/maintenance-npm/package.json"
+    },
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg",
+      "name": "renovate",
+      "version": "44.65.1",
+      "filePath": "usr/local/renovate/package.json"
+    },
+    {
+      "class": "lang-pkgs",
+      "type": "node-pkg",
+      "name": "tar",
+      "version": "7.5.21",
+      "filePath": "usr/local/maintenance-npm/node_modules/tar/package.json"
+    }
+  ],
+  "sourceEvidence": {
+    "reportSha256": "bcd0e7f935177a88fc59e8dc789273a5890a113942947f119ee498384984685e",
+    "stderrSha256": "1578684ec46d697ca72486331fc9d17c1ecb8564bda1a829325803fb5a1b863a"
+  },
+  "binaryCoverage": "Trivy reports OS and Node package inventories. The separately installed Node binary is bound by the immutable image and checked for the reviewed version before project execution."
+}
