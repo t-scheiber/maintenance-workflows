@@ -67,6 +67,10 @@ jobs:
             ${{ runner.temp }}/actionlint/stdout.log
             ${{ runner.temp }}/actionlint/lint-stderr.log
             ${{ runner.temp }}/runtime-node24/receipt.json
+            ${{ runner.temp }}/runtime-node24/report.json
+            ${{ runner.temp }}/runtime-node24/stderr.log
+            ${{ runner.temp }}/runtime-node24/stdout.log
+            ${{ runner.temp }}/runtime-node24/operations
             ${{ runner.temp }}/native-bundle-verification/artifacts
           retention-days: 7
   scanners:
@@ -120,6 +124,24 @@ jobs:
         env:
           SCANNER: ${{ matrix.scanner }}
         run: node "$GITHUB_WORKSPACE/controls/tools/static-pages/source-scanner.mjs" "$SCANNER"
+      - name: Preserve bounded source-free runtime and native diagnostics
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: shared-runtime-${{ matrix.scanner }}
+          path: |
+            ${{ runner.temp }}/runtime-node24/receipt.json
+            ${{ runner.temp }}/runtime-node24/report.json
+            ${{ runner.temp }}/runtime-node24/stderr.log
+            ${{ runner.temp }}/runtime-node24/stdout.log
+            ${{ runner.temp }}/runtime-node24/operations
+            ${{ runner.temp }}/runtime-semgrep/receipt.json
+            ${{ runner.temp }}/runtime-semgrep/report.json
+            ${{ runner.temp }}/runtime-semgrep/stderr.log
+            ${{ runner.temp }}/runtime-semgrep/stdout.log
+            ${{ runner.temp }}/runtime-semgrep/operations
+            ${{ runner.temp }}/native-bundle-verification/artifacts
+          retention-days: 7
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always() && steps.scan.outputs.summary_path != ''
         with:

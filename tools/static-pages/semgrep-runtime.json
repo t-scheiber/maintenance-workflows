@@ -2,8 +2,8 @@
   "schema": 1,
   "runtime": "semgrep",
   "platform": "linux/amd64",
-  "baseImage": "semgrep/semgrep:1.176.0@sha256:12672acdb0949e19f9f6a4c2b288edd0b404f268f0ca7738a2c06f372f50362e",
-  "recipeSha256": "2b47ac992ad9ecaae0969f70f6037dc376c67ae12cd3d4aa3b048541e71dd70e",
+  "baseImage": "semgrep/semgrep:1.176.0@sha256:d39aa8d8cdb7fd9e5ec14f0825e2356f902129778c9617217856295e553254d5",
+  "recipeSha256": "7b3ee0d255dd8fd25044cb07ea942c0a9143b2022267d11482ce402106805b39",
   "expectedCoverage": [
     {
       "class": "lang-pkgs",
